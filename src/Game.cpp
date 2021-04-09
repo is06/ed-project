@@ -23,7 +23,7 @@ Game::Game()
     videoDriver = irrlichtDevice->getVideoDriver();
     sceneManager = irrlichtDevice->getSceneManager();
 
-    currentScene = new Map(this);
+    currentScene = new Map(this, "labo");
 }
 
 void Game::mainLoop()
