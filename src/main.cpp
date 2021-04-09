@@ -3,9 +3,7 @@
 
 int main()
 {
-    printf("Hello World!");
-
-    Game game;
+    Game::run();
 
     return 0;
 }

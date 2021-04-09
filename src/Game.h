@@ -8,11 +8,16 @@ using namespace irr;
 class Game
 {
 public:
-    Game();
+    static void run();
     ~Game();
 
 private:
+    Game();
+    void mainLoop();
+
     IrrlichtDevice* irrlichtDevice;
+    video::IVideoDriver* videoDriver;
+    scene::ISceneManager* sceneManager;
 };
 
 #endif
