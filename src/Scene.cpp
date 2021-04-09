@@ -17,6 +17,11 @@ void Scene::draw()
 
 }
 
+scene::ISceneManager* Scene::getSceneManager()
+{
+    return sceneManager;
+}
+
 Scene::~Scene()
 {
 

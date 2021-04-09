@@ -17,6 +17,8 @@ public:
     virtual void draw();
     virtual ~Scene();
 
+    scene::ISceneManager* getSceneManager();
+
 protected:
     Game* game;
     scene::ISceneManager* sceneManager;

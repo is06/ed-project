@@ -1,7 +1,11 @@
 #ifndef ENTITY_H
 #define ENTITY_H
 
+#include <irrlicht/irrlicht.h>
+
 #include "Scene.h"
+
+using namespace irr;
 
 class Scene;
 
@@ -12,6 +16,9 @@ public:
     virtual void update();
     virtual void draw();
     virtual ~Entity();
+
+protected:
+    scene::ISceneNode* node;
 };
 
 #endif
