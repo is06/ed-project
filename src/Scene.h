@@ -3,10 +3,12 @@
 
 #include <irrlicht/irrlicht.h>
 
+#include "Controller.h"
 #include "Game.h"
 
 using namespace irr;
 
+class Controller;
 class Game;
 
 class Scene
@@ -21,6 +23,7 @@ public:
 
 protected:
     Game* game;
+    Controller* controller;
     scene::ISceneManager* sceneManager;
 };
 

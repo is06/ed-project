@@ -3,13 +3,15 @@
 
 #include "../Camera.h"
 #include "../Player.h"
+#include "../../Controller.h"
 
+class Controller;
 class Player;
 
 class TpCamera : public Camera
 {
 public:
-    TpCamera(Player* player);
+    TpCamera(Player* player, Controller* controller);
     void update();
     ~TpCamera();
 
@@ -20,6 +22,7 @@ public:
 
 private:
     Player* player;
+    Controller* controller;
     f32 rotation;
     f32 height;
     f32 distance;

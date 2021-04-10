@@ -4,6 +4,7 @@
 Scene::Scene(Game* game)
 {
     this->game = game;
+    this->controller = game->getController();
     this->sceneManager = game->getSceneManager();
 }
 

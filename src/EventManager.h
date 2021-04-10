@@ -12,9 +12,11 @@ public:
 
     bool OnEvent(const SEvent& event);
     bool isKeyDown(EKEY_CODE code);
+    bool isKeyDownOnce(EKEY_CODE code);
 
 private:
     bool keyDown[KEY_KEY_CODES_COUNT];
+    bool keyDownOnce[KEY_KEY_CODES_COUNT];
 };
 
 #endif

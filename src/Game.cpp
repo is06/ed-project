@@ -23,18 +23,13 @@ Game::Game()
     videoDriver = irrlichtDevice->getVideoDriver();
     sceneManager = irrlichtDevice->getSceneManager();
 
+    controller = new Controller(static_cast<EventManager*>(irrlichtDevice->getEventReceiver()));
     currentScene = new Map(this, "labo");
 }
 
 void Game::mainLoop()
 {
-    EventManager* eventManager = static_cast<EventManager*>(irrlichtDevice->getEventReceiver());
-
     while (irrlichtDevice->run()) {
-        if (eventManager->isKeyDown(KEY_ESCAPE)) {
-            irrlichtDevice->closeDevice();
-        }
-
         videoDriver->beginScene();
         currentScene->update();
         sceneManager->drawAll();
@@ -49,9 +44,15 @@ scene::ISceneManager* Game::getSceneManager()
     return sceneManager;
 }
 
+Controller* Game::getController()
+{
+    return controller;
+}
+
 Game::~Game()
 {
     delete currentScene;
+    delete controller;
 
     irrlichtDevice->drop();
 }

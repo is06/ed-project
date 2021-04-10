@@ -1,8 +1,9 @@
 #include "TpCamera.h"
 
-TpCamera::TpCamera(Player* player) : Camera(player->getScene())
+TpCamera::TpCamera(Player* player, Controller* controller) : Camera(player->getScene())
 {
     this->player = player;
+    this->controller = controller;
 
     auto camera = static_cast<scene::ICameraSceneNode*>(node);
     camera->bindTargetAndRotation(true);
@@ -17,7 +18,20 @@ void TpCamera::update()
 {
     Camera::update();
 
+    f32 xrot = controller->getCameraXRotation();
+    f32 yrot = controller->getCameraYRotation();
 
+    if (xrot < -35.0f) {
+        goLeft(xrot * -1);
+    } else if (xrot > 35.0f) {
+        goRight(xrot);
+    }
+
+    if (yrot > 35.0f) {
+        goNear(yrot);
+    } else if (yrot < -35.0f) {
+        goFar(yrot * -1);
+    }
 
     f32 x = player->getNode()->getPosition().X + distance * cos(rotation);
     f32 z = player->getNode()->getPosition().Y + distance * sin(rotation);

@@ -9,10 +9,9 @@ Map::Map(Game* game, const string& name) : Scene(game)
     this->name = name;
 
     player = new Player(this);
-    camera = new TpCamera(player);
+    camera = new TpCamera(player, controller);
 
     zones["001"] = new MapZone(this, "zone001");
-    //zones["002"] = new MapZone(this, "plane");
 }
 
 void Map::update()
@@ -20,6 +19,7 @@ void Map::update()
     Scene::update();
 
     player->update();
+    camera->update();
 
     for (auto& pair : entities) {
         pair.second->update();
