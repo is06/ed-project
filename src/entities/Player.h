@@ -12,6 +12,8 @@ public:
     Player(Scene* scene);
     void update();
     ~Player();
+
+    Scene* getScene();
 };
 
 #endif

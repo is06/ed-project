@@ -5,10 +5,6 @@ Camera::Camera(Scene* scene) : Entity(scene)
 {
     node = scene->getSceneManager()->addCameraSceneNode();
     node->setPosition(core::vector3df(8, 8, -6));
-
-    auto camera = static_cast<scene::ICameraSceneNode*>(node);
-    camera->bindTargetAndRotation(true);
-    camera->setTarget(core::vector3df(0, 0, 0));
 }
 
 void Camera::update()

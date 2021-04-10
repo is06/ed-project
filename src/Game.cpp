@@ -36,6 +36,7 @@ void Game::mainLoop()
         }
 
         videoDriver->beginScene();
+        currentScene->update();
         sceneManager->drawAll();
         videoDriver->endScene();
 

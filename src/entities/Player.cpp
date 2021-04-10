@@ -10,6 +10,13 @@ Player::Player(Scene* scene)
 void Player::update()
 {
     Model::update();
+
+    
+}
+
+Scene* Player::getScene()
+{
+    return scene;
 }
 
 Player::~Player()

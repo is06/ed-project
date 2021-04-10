@@ -17,7 +17,10 @@ public:
     virtual void draw();
     virtual ~Entity();
 
+    scene::ISceneNode* getNode();
+
 protected:
+    Scene* scene;
     scene::ISceneNode* node;
 };
 

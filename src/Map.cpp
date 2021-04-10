@@ -1,15 +1,15 @@
 #include "Game.h"
 #include "Map.h"
 #include "Scene.h"
-#include "entities/Camera.h"
 #include "entities/Player.h"
+#include "entities/cameras/TpCamera.h"
 
 Map::Map(Game* game, const string& name) : Scene(game)
 {
     this->name = name;
 
     player = new Player(this);
-    camera = new Camera(this);
+    camera = new TpCamera(player);
 
     zones["001"] = new MapZone(this, "zone001");
     //zones["002"] = new MapZone(this, "plane");
