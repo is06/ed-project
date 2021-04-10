@@ -3,15 +3,19 @@
 #include "Scene.h"
 #include "entities/Player.h"
 #include "entities/cameras/TpCamera.h"
+#include "entities/lights/PointLight.h"
 
 Map::Map(Game* game, const string& name) : Scene(game)
 {
     this->name = name;
 
+    sceneManager->setAmbientLight(video::SColor(255, 255, 255, 255));
+
     player = new Player(this);
     camera = new TpCamera(player, controller);
 
     zones["001"] = new MapZone(this, "zone001");
+    //entities["test_light"] = new PointLight(this, video::SColor(255, 255, 255, 0), 0.01f);
 }
 
 void Map::update(f32 speed)

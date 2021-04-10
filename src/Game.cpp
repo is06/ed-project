@@ -16,7 +16,7 @@ Game::Game()
     SIrrlichtCreationParameters params;
     params.Bits = 32;
     params.WindowSize = core::dimension2du(1280, 720);
-    params.Vsync = false;
+    params.Vsync = true;
     params.DriverType = video::EDT_OPENGL;
     params.EventReceiver = new EventManager();
 

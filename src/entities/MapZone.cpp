@@ -10,8 +10,8 @@ MapZone::MapZone(Map* map, const string& name)
         throw GameException("Unable to create map zone node");
     }
 
-    node->setMaterialFlag(video::EMF_LIGHTING, false);
-    node->setMaterialFlag(video::EMF_BACK_FACE_CULLING, true);
+    node->getMaterial(0).Shininess = 0;
+    node->getMaterial(0).SpecularColor = video::SColor(0, 0, 0, 0);
 }
 
 MapZone::~MapZone()
