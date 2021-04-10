@@ -16,10 +16,11 @@ Game::Game()
     SIrrlichtCreationParameters params;
     params.Bits = 32;
     params.WindowSize = core::dimension2du(1280, 720);
+    params.Vsync = false;
+    params.DriverType = video::EDT_OPENGL;
     params.EventReceiver = new EventManager();
 
     irrlichtDevice = createDeviceEx(params);
-    irrlichtDevice->setWindowCaption(L"Ed project (Tonic Trouble like game)");
     videoDriver = irrlichtDevice->getVideoDriver();
     sceneManager = irrlichtDevice->getSceneManager();
 
@@ -29,14 +30,21 @@ Game::Game()
 
 void Game::mainLoop()
 {
-    u32 realTime = 0.0f;
-    f32 lastCycleTime, loopTime = 0.0f;
+    u32 lastCycleTime, lastFPS, loopTime, realTime = 0.0f;
 
     while (irrlichtDevice->run()) {
+        // Time computation
         realTime = irrlichtDevice->getTimer()->getRealTime();
         lastCycleTime = realTime - loopTime;
         loopTime = realTime;
 
+        // Display FPS
+        lastFPS = videoDriver->getFPS();
+        core::stringw title = L"Ed project (Tonic Trouble like game) - ";
+        title += lastFPS;
+        irrlichtDevice->setWindowCaption(title.c_str());
+
+        // Scene rendering
         videoDriver->beginScene();
         currentScene->update(lastCycleTime / 1000.0f);
         sceneManager->drawAll();
