@@ -12,9 +12,9 @@ Model::Model(Scene* scene, const string& name) : Entity(scene)
     }
 }
 
-void Model::update()
+void Model::update(f32 speed)
 {
-    Entity::update();
+    Entity::update(speed);
 }
 
 Model::~Model()

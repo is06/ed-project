@@ -15,7 +15,7 @@ class Scene
 {
 public:
     Scene(Game* game);
-    virtual void update();
+    virtual void update(f32 speed);
     virtual void draw();
     virtual ~Scene();
 

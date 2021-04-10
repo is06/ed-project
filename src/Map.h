@@ -24,7 +24,7 @@ class Map : public Scene
 {
 public:
     Map(Game* game, const string& name);
-    virtual void update();
+    virtual void update(f32 speed);
     virtual void draw();
     virtual ~Map();
 

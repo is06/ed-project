@@ -14,15 +14,15 @@ Map::Map(Game* game, const string& name) : Scene(game)
     zones["001"] = new MapZone(this, "zone001");
 }
 
-void Map::update()
+void Map::update(f32 speed)
 {
-    Scene::update();
+    Scene::update(speed);
 
-    player->update();
-    camera->update();
+    player->update(speed);
+    camera->update(speed);
 
     for (auto& pair : entities) {
-        pair.second->update();
+        pair.second->update(speed);
     }
 }
 

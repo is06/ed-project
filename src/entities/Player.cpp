@@ -7,11 +7,9 @@ Player::Player(Scene* scene)
     node->setMaterialFlag(video::EMF_LIGHTING, false);
 }
 
-void Player::update()
+void Player::update(f32 speed)
 {
-    Model::update();
-
-    
+    Model::update(speed);
 }
 
 Scene* Player::getScene()

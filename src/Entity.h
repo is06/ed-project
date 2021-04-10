@@ -13,7 +13,7 @@ class Entity
 {
 public:
     Entity(Scene* scene);
-    virtual void update();
+    virtual void update(f32 speed);
     virtual void draw();
     virtual ~Entity();
 

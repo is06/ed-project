@@ -12,15 +12,15 @@ class TpCamera : public Camera
 {
 public:
     TpCamera(Player* player, Controller* controller);
-    void update();
+    void update(f32 speed);
     ~TpCamera();
 
+private:
     void goLeft(f32 speed);
     void goRight(f32 speed);
     void goNear(f32 speed);
     void goFar(f32 speed);
 
-private:
     Player* player;
     Controller* controller;
     f32 rotation;

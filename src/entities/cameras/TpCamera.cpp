@@ -14,23 +14,23 @@ TpCamera::TpCamera(Player* player, Controller* controller) : Camera(player->getS
     distance = 4.0f;
 }
 
-void TpCamera::update()
+void TpCamera::update(f32 speed)
 {
-    Camera::update();
+    Camera::update(speed);
 
     f32 xrot = controller->getCameraXRotation();
     f32 yrot = controller->getCameraYRotation();
 
     if (xrot < -35.0f) {
-        goLeft(xrot * -1);
+        goLeft(speed * xrot * -1);
     } else if (xrot > 35.0f) {
-        goRight(xrot);
+        goRight(speed * xrot);
     }
 
     if (yrot > 35.0f) {
-        goNear(yrot);
+        goNear(speed * yrot);
     } else if (yrot < -35.0f) {
-        goFar(yrot * -1);
+        goFar(speed * yrot * -1);
     }
 
     f32 x = player->getNode()->getPosition().X + distance * cos(rotation);

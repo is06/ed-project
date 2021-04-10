@@ -8,7 +8,7 @@ Scene::Scene(Game* game)
     this->sceneManager = game->getSceneManager();
 }
 
-void Scene::update()
+void Scene::update(f32 speed)
 {
     
 }

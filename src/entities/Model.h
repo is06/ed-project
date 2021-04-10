@@ -16,7 +16,7 @@ class Model : public Entity
 {
 public:
     Model(Scene* scene, const string& name);
-    virtual void update();
+    virtual void update(f32 speed);
     virtual ~Model();
 
 protected:

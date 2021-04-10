@@ -10,7 +10,7 @@ class Player : public Model
 {
 public:
     Player(Scene* scene);
-    void update();
+    void update(f32 speed);
     ~Player();
 
     Scene* getScene();

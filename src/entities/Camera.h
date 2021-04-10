@@ -8,7 +8,7 @@ class Camera : public Entity
 {
 public:
     Camera(Scene* scene);
-    virtual void update();
+    virtual void update(f32 speed);
     virtual ~Camera();
 };
 

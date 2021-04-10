@@ -29,9 +29,16 @@ Game::Game()
 
 void Game::mainLoop()
 {
+    u32 realTime = 0.0f;
+    f32 lastCycleTime, loopTime = 0.0f;
+
     while (irrlichtDevice->run()) {
+        realTime = irrlichtDevice->getTimer()->getRealTime();
+        lastCycleTime = realTime - loopTime;
+        loopTime = realTime;
+
         videoDriver->beginScene();
-        currentScene->update();
+        currentScene->update(lastCycleTime / 1000.0f);
         sceneManager->drawAll();
         videoDriver->endScene();
 

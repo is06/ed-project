@@ -7,9 +7,9 @@ Camera::Camera(Scene* scene) : Entity(scene)
     node->setPosition(core::vector3df(8, 8, -6));
 }
 
-void Camera::update()
+void Camera::update(f32 speed)
 {
-    Entity::update();
+    Entity::update(speed);
 }
 
 Camera::~Camera()

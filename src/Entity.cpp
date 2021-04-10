@@ -6,7 +6,7 @@ Entity::Entity(Scene* scene)
     this->scene = scene;
 }
 
-void Entity::update()
+void Entity::update(f32 speed)
 {
 
 }
