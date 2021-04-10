@@ -2,18 +2,20 @@
 #define PLAYER_H
 
 #include "Model.h"
-#include "../Scene.h"
+#include "../Map.h"
 
-class Scene;
+class Map;
 
 class Player : public Model
 {
 public:
-    Player(Scene* scene);
+    Player(Map* scene);
     void update(f32 speed);
     ~Player();
 
-    Scene* getScene();
+    Map* getMap();
+
+    core::aabbox3df hitBox;
 };
 
 #endif

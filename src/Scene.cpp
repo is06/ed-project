@@ -23,6 +23,11 @@ scene::ISceneManager* Scene::getSceneManager()
     return sceneManager;
 }
 
+Controller* Scene::getController()
+{
+    return controller;
+}
+
 Scene::~Scene()
 {
 

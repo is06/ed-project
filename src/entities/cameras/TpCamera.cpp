@@ -1,17 +1,21 @@
 #include "TpCamera.h"
 
-TpCamera::TpCamera(Player* player, Controller* controller) : Camera(player->getScene())
+TpCamera::TpCamera(Player* player, Controller* controller) : Camera(player->getMap())
 {
     this->player = player;
     this->controller = controller;
 
     auto camera = static_cast<scene::ICameraSceneNode*>(node);
     camera->bindTargetAndRotation(true);
-    camera->setTarget(player->getNode()->getPosition());
+    camera->setTarget(core::vector3df(
+        player->getNode()->getPosition().X,
+        player->getNode()->getPosition().Y + 1.7f,
+        player->getNode()->getPosition().Z
+    ));
 
     rotation = (3 * core::PI) / 2;
-    height = 1.8f;
-    distance = 4.0f;
+    height = MAX_HEIGHT;
+    distance = MAX_FAR;
 }
 
 void TpCamera::update(f32 speed)
@@ -41,7 +45,7 @@ void TpCamera::update(f32 speed)
 
 void TpCamera::goLeft(f32 speed)
 {
-    rotation -= (speed / 60.0f);
+    rotation -= (speed / ROTATION_SPEED);
     if (rotation < 0) {
         rotation = 2 * core::PI;
     }
@@ -49,7 +53,7 @@ void TpCamera::goLeft(f32 speed)
 
 void TpCamera::goRight(f32 speed)
 {
-    rotation += (speed / 60.0f);
+    rotation += (speed / ROTATION_SPEED);
     if (rotation > (2 * core::PI)) {
         rotation = 0;
     }
@@ -57,31 +61,31 @@ void TpCamera::goRight(f32 speed)
 
 void TpCamera::goNear(f32 speed)
 {
-    if (height > 0.3f) {
-        height -= (speed / 50.0f);
+    if (height > MIN_HEIGHT) {
+        height -= (speed / DISTANCE_SPEED);
     }
-    if (height < 0.3f) {
-        height = 0.3f;
+    if (height < MIN_HEIGHT) {
+        height = MIN_HEIGHT;
     }
-    if (distance > 2.5f) {
-        distance -= (speed / 50.0f);
+    if (distance > MIN_NEAR) {
+        distance -= (speed / DISTANCE_SPEED);
     } else {
-        distance = 2.5f;
+        distance = MIN_NEAR;
     }
 }
 
 void TpCamera::goFar(f32 speed)
 {
-    if (height < 3.3f) {
-        height += (speed / 50.0f);
+    if (height < MAX_HEIGHT) {
+        height += (speed / DISTANCE_SPEED);
     }
-    if (height > 3.3f) {
-        height = 3.3f;
+    if (height > MAX_HEIGHT) {
+        height = MAX_HEIGHT;
     }
-    if (distance < 5.5f) {
-        distance += (speed / 50.0f);
+    if (distance < MAX_FAR) {
+        distance += (speed / DISTANCE_SPEED);
     } else {
-        distance = 5.5f;
+        distance = MAX_FAR;
     }
 }
 

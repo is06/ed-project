@@ -20,6 +20,7 @@ public:
     virtual ~Scene();
 
     scene::ISceneManager* getSceneManager();
+    Controller* getController();
 
 protected:
     Game* game;

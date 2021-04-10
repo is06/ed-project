@@ -3,6 +3,7 @@
 
 #include <string>
 #include <unordered_map>
+#include <irrlicht/irrlicht.h>
 
 #include "Entity.h"
 #include "Game.h"
@@ -11,6 +12,7 @@
 #include "entities/MapZone.h"
 #include "entities/Player.h"
 
+using namespace irr;
 using namespace std;
 
 class Camera;
@@ -29,6 +31,8 @@ public:
     virtual ~Map();
 
     const string& getName() const;
+
+    core::vector3df gravity;
 
 private:
     string name;

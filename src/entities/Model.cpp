@@ -17,6 +17,11 @@ void Model::update(f32 speed)
     Entity::update(speed);
 }
 
+scene::IMesh* Model::getMesh()
+{
+    return mesh;
+}
+
 Model::~Model()
 {
 

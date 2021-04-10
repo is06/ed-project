@@ -26,6 +26,13 @@ private:
     f32 rotation;
     f32 height;
     f32 distance;
+
+    static constexpr f32 ROTATION_SPEED = 60.0f;
+    static constexpr f32 DISTANCE_SPEED = 50.0f;
+    static constexpr f32 MAX_FAR = 10.0f;
+    static constexpr f32 MIN_NEAR = 5.0f;
+    static constexpr f32 MAX_HEIGHT = 5.0f;
+    static constexpr f32 MIN_HEIGHT = 1.0f;
 };
 
 #endif

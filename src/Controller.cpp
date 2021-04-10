@@ -5,6 +5,19 @@ Controller::Controller(EventManager* eventManager)
     keyboard = new Keyboard(eventManager);
 }
 
+bool Controller::isActionPerformed(ControlAction action, bool once)
+{
+    switch (action) {
+        case ACTION_JUMP:
+            return keyboard->pressed(KEY_KEY_V, once);
+            break;
+        default:
+            break;
+    }
+
+    return false;
+}
+
 f32 Controller::getCameraXRotation()
 {
     if (keyboard->pressed(KEY_KEY_J)) {

@@ -19,6 +19,8 @@ public:
     virtual void update(f32 speed);
     virtual ~Model();
 
+    scene::IMesh* getMesh();
+
 protected:
     scene::IMesh* mesh;
 };

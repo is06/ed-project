@@ -7,11 +7,19 @@
 class EventManager;
 class Keyboard;
 
+enum ControlAction
+{
+    ACTION_JUMP,
+    ACTION_ATTACK
+};
+
 class Controller
 {
 public:
     Controller(EventManager* eventManager);
     ~Controller();
+
+    bool isActionPerformed(ControlAction action, bool once = false);
 
     f32 getCameraXRotation();
     f32 getCameraYRotation();
