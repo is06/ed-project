@@ -17,6 +17,7 @@ public:
     Light* position(f32 x, f32 y, f32 z);
     Light* color(video::SColor);
     Light* radius(f32 radius);
+    Light* data(const video::SLight& lightData);
 };
 
 #endif

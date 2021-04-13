@@ -36,9 +36,7 @@ public:
 
     core::vector3df gravity;
 
-private:
-    void initCollisions();
-    
+private:    
     Light* addLight(const string& name);
     Light* light(const string& name);
 

@@ -30,6 +30,13 @@ Light* Light::radius(f32 radius)
     return this;
 }
 
+Light* Light::data(const video::SLight& lightData)
+{
+    auto light = static_cast<scene::ILightSceneNode*>(node);
+    light->setLightData(lightData);
+    return this;
+}
+
 Light::~Light()
 {
 
