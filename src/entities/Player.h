@@ -18,8 +18,6 @@ public:
     void attachWorldForCollisions(World* world);
     Map* getMap();
 
-    core::aabbox3df hitBox;
-
 private:
     scene::ISceneNodeAnimatorCollisionResponse* animator;
 };

@@ -7,11 +7,6 @@ Player::Player(Map* map)
     node->setMaterialFlag(video::EMF_LIGHTING, false);
     node->setMaterialFlag(video::EMF_WIREFRAME, true);
     node->setPosition(core::vector3df(0, 5.0f, 0));
-
-    hitBox = core::aabbox3df(
-        core::vector3df(0, 0, 0),
-        core::vector3df(0, 0, 0)
-    );
 }
 
 void Player::update(f32 speed)

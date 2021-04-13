@@ -38,7 +38,7 @@ void TpCamera::update(f32 speed)
     }
 
     f32 x = player->getNode()->getPosition().X + distance * cos(rotation);
-    f32 z = player->getNode()->getPosition().Y + distance * sin(rotation);
+    f32 z = player->getNode()->getPosition().Z + distance * sin(rotation);
 
     node->setPosition(core::vector3df(x, player->getNode()->getPosition().Y + height, z));
 }
