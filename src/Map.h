@@ -9,8 +9,9 @@
 #include "Game.h"
 #include "Scene.h"
 #include "entities/Camera.h"
-#include "entities/MapZone.h"
+#include "entities/Light.h"
 #include "entities/Player.h"
+#include "entities/World.h"
 
 using namespace irr;
 using namespace std;
@@ -18,9 +19,10 @@ using namespace std;
 class Camera;
 class Entity;
 class Game;
-class MapZone;
+class Light;
 class Player;
 class Scene;
+class World;
 
 class Map : public Scene
 {
@@ -35,10 +37,15 @@ public:
     core::vector3df gravity;
 
 private:
+    void initCollisions();
+    
+    Light* addLight(const string& name);
+    Light* light(const string& name);
+
     string name;
     Player* player;
     Camera* camera;
-    unordered_map<string, MapZone*> zones;
+    World* world;
     unordered_map<string, Entity*> entities;
 };
 

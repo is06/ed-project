@@ -1,7 +1,7 @@
-#include "MapZone.h"
+#include "World.h"
 #include "../GameException.h"
 
-MapZone::MapZone(Map* map, const string& name)
+World::World(Map* map, const string& name)
     : Model(map, "content/models/maps/" + map->getName() + "/" + name + ".obj")
 {
     node = map->getSceneManager()->addMeshSceneNode(mesh);
@@ -14,7 +14,7 @@ MapZone::MapZone(Map* map, const string& name)
     node->getMaterial(0).SpecularColor = video::SColor(0, 0, 0, 0);
 }
 
-MapZone::~MapZone()
+World::~World()
 {
     node->remove();
 }
