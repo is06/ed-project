@@ -10,6 +10,26 @@ void Light::update(f32 speed)
     Entity::update(speed);
 }
 
+Light* Light::position(f32 x, f32 y, f32 z)
+{
+    node->setPosition(core::vector3df(x, y, z));
+    return this;
+}
+
+Light* Light::color(video::SColor color)
+{
+    auto light = static_cast<scene::ILightSceneNode*>(node);
+    light->getLightData().DiffuseColor = color;
+    return this;
+}
+
+Light* Light::radius(f32 radius)
+{
+    auto light = static_cast<scene::ILightSceneNode*>(node);
+    light->setRadius(radius);
+    return this;
+}
+
 Light::~Light()
 {
 

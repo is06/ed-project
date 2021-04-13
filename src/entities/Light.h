@@ -13,6 +13,10 @@ public:
     Light(Scene* scene);
     virtual void update(f32 speed);
     virtual ~Light();
+
+    Light* position(f32 x, f32 y, f32 z);
+    Light* color(video::SColor);
+    Light* radius(f32 radius);
 };
 
 #endif
