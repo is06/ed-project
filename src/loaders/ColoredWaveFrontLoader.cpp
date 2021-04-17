@@ -49,8 +49,8 @@ scene::IAnimatedMesh* ColoredWaveFrontLoader::createMesh(io::IReadFile* file)
         switch (bufferPointer[0]) {
             case 'm': { // mtllib
                 c8 name[WORD_BUFFER_LENGTH];
-				bufferPointer = goAndCopyNextWord(name, bufferPointer, WORD_BUFFER_LENGTH, bufferPointer);
-				readMaterial(name, relativePath);
+                bufferPointer = goAndCopyNextWord(name, bufferPointer, WORD_BUFFER_LENGTH, bufferPointer);
+                readMaterial(name, relativePath);
                 break;
             }
             case 'v': { // vertices
