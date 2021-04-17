@@ -16,6 +16,13 @@ void Entity::draw()
 
 }
 
+Entity* Entity::position(f32 x, f32 y, f32 z)
+{
+    node->setPosition(core::vector3df(x, y, z));
+
+    return this;
+}
+
 scene::ISceneNode* Entity::getNode()
 {
     return node;

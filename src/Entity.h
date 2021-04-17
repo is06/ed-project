@@ -18,6 +18,7 @@ public:
     virtual ~Entity();
 
     scene::ISceneNode* getNode();
+    Entity* position(f32 x, f32 y, f32 z);
 
 protected:
     Scene* scene;
