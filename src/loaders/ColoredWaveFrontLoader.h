@@ -53,6 +53,13 @@ private:
         bool recalculateNormals;
     };
 
+    enum ETextureType {
+        CTT_DIFFUSE_COLOR = 0,
+        CTT_SPECULAR_COLOR = 1,
+        CTT_AMBIENT_COLOR = 2,
+        CTT_SHININESS = 3
+    };
+
     const c8* readTextures(const c8* bufferPointer, const c8* const bufferEnd, SObjMtl* currentMaterial, const io::path& relativePath);
     const c8* goFirstWord(const c8* bufferPointer, const c8* const bufferEnd, bool acrossNewlines=true);
     const c8* goNextWord(const c8* bufferPointer, const c8* const bufferEnd, bool acrossNewlines=true);
@@ -66,7 +73,7 @@ private:
     const c8* readVector3(const c8* bufferPointer, core::vector3df& vector, const c8* const bufferEnd);
     const c8* readUV(const c8* bufferPointer, core::vector2df& vector, const c8* const bufferEnd);
     const c8* readBool(const c8* bufferPointer, bool& flag, const c8* const bufferEnd);
-    bool retrieveVertexIndices(c8* vertexData, s32* indices, const c8* bufferEnd, u32 vbSize, u32 vtSize, u32 vnSize, u32 vcSize);
+    bool retrieveVertexIndices(c8* vertexData, s32* indices, const c8* bufferEnd, u32 vbSize, u32 vtSize, u32 vnSize);
     void cleanUp();
 
     core::array<SObjMtl*> materials;

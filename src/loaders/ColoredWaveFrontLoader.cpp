@@ -44,13 +44,17 @@ scene::IAnimatedMesh* ColoredWaveFrontLoader::createMesh(io::IReadFile* file)
     // Process file
     core::stringc groupName, materialName;
     bool materialHasChanged = false;
+    bool useGroups = !sceneManager->getParameters()->getAttributeAsBool(scene::OBJ_LOADER_IGNORE_GROUPS);
+    bool useMaterials = !sceneManager->getParameters()->getAttributeAsBool(scene::OBJ_LOADER_IGNORE_MATERIAL_FILES);
 
     while (bufferPointer != bufferEnd) {
         switch (bufferPointer[0]) {
             case 'm': { // mtllib
-                c8 name[WORD_BUFFER_LENGTH];
-                bufferPointer = goAndCopyNextWord(name, bufferPointer, WORD_BUFFER_LENGTH, bufferPointer);
-                readMaterial(name, relativePath);
+                if (useMaterials) {
+                    c8 name[WORD_BUFFER_LENGTH];
+                    bufferPointer = goAndCopyNextWord(name, bufferPointer, WORD_BUFFER_LENGTH, bufferEnd);
+                    readMaterial(name, relativePath);
+                }
                 break;
             }
             case 'v': { // vertices
@@ -61,19 +65,19 @@ scene::IAnimatedMesh* ColoredWaveFrontLoader::createMesh(io::IReadFile* file)
                         vertexBuffer.push_back(coords);
                         break;
                     }
-                    case 'n': {
+                    case 'n': { // normal
                         core::vector3df normal;
                         bufferPointer = readVector3(bufferPointer, normal, bufferEnd);
                         normalsBuffer.push_back(normal);
                         break;
                     }
-                    case 't': {
+                    case 't': { // texture coords
                         core::vector2df textureCoords;
                         bufferPointer = readUV(bufferPointer, textureCoords, bufferEnd);
                         textureCoordBuffer.push_back(textureCoords);
                         break;
                     }
-                    case 'c': {
+                    case 'c': { // vertex color
                         video::SColor color;
                         bufferPointer = readColor(bufferPointer, color, bufferEnd);
                         vertexColorBuffer.push_back(color);
@@ -85,20 +89,31 @@ scene::IAnimatedMesh* ColoredWaveFrontLoader::createMesh(io::IReadFile* file)
             case 'g': { // group
                 c8 group[WORD_BUFFER_LENGTH];
                 bufferPointer = goAndCopyNextWord(group, bufferPointer, WORD_BUFFER_LENGTH, bufferEnd);
-                if (group[0] != 0) {
-                    groupName = group;
-                } else {
-                    groupName = "default";
+                if (useGroups) {
+                    if (group[0] != 0) {
+                        groupName = group;
+                    } else {
+                        groupName = "default";
+                    }
                 }
                 materialHasChanged = true;
                 break;
             }
             case 's': { // smoothing
-
+                c8 smooth[WORD_BUFFER_LENGTH];
+                bufferPointer = goAndCopyNextWord(smooth, bufferPointer, WORD_BUFFER_LENGTH, bufferEnd);
+                if (core::stringc("off") == smooth) {
+                    smoothingGroup = 0;
+                } else {
+                    smoothingGroup = core::strtol10(smooth);
+                }
                 break;
             }
             case 'u': { // usemtl
-
+                c8 name[WORD_BUFFER_LENGTH];
+                bufferPointer = goAndCopyNextWord(name, bufferPointer, WORD_BUFFER_LENGTH, bufferEnd);
+                materialName = name;
+                materialHasChanged = true;
                 break;
             }
             case 'f': { // face
@@ -136,8 +151,7 @@ scene::IAnimatedMesh* ColoredWaveFrontLoader::createMesh(io::IReadFile* file)
                         vertexWord + wordLength + 1,
                         vertexBuffer.size(),
                         textureCoordBuffer.size(),
-                        normalsBuffer.size(),
-                        vertexColorBuffer.size()
+                        normalsBuffer.size()
                     );
 
                     // Coords
@@ -159,8 +173,8 @@ scene::IAnimatedMesh* ColoredWaveFrontLoader::createMesh(io::IReadFile* file)
                     }
 
                     // Vertex colors
-                    if (indices[3] != -1) {
-                        vertex.Color = vertexColorBuffer[indices[3]];
+                    if (indices[1] != -1) {
+                        vertex.Color = vertexColorBuffer[indices[1]];
                     }
 
                     int vertexLocation;
@@ -231,14 +245,324 @@ scene::IAnimatedMesh* ColoredWaveFrontLoader::createMesh(io::IReadFile* file)
     return animatedMesh;
 }
 
+const c8* ColoredWaveFrontLoader::readTextures(const c8* bufferPointer, const c8* const bufferEnd, SObjMtl* currentMaterial, const io::path& relativePath)
+{
+    ETextureType type = CTT_DIFFUSE_COLOR;
+
+    if ((!strncmp(bufferPointer, "map_bump", 8)) || (!strncmp(bufferPointer, "bump", 4))) {
+        type = CTT_SPECULAR_COLOR;
+    } else if ((!strncmp(bufferPointer, "map_d", 5)) || (!strncmp(bufferPointer, "map_opacity", 11))) {
+        type = CTT_AMBIENT_COLOR;
+    } else if (!strncmp(bufferPointer, "map_refl", 8)) {
+        type = CTT_SHININESS;
+    }
+
+    c8 textureNameBuffer[WORD_BUFFER_LENGTH];
+    bufferPointer = goAndCopyNextWord(textureNameBuffer, bufferPointer, WORD_BUFFER_LENGTH, bufferEnd);
+
+    f32 bumpiness = 6.0f;
+    bool clamp = false;
+
+    while (textureNameBuffer[0] == '-') {
+        if (!strncmp(bufferPointer, "-bm", 3)) {
+            bufferPointer = goAndCopyNextWord(textureNameBuffer, bufferPointer, WORD_BUFFER_LENGTH, bufferEnd);
+            currentMaterial->meshbuffer->Material.MaterialTypeParam = core::fast_atof(textureNameBuffer);
+            bufferPointer = goAndCopyNextWord(textureNameBuffer, bufferPointer, WORD_BUFFER_LENGTH, bufferEnd);
+            continue;
+        } else if (!strncmp(bufferPointer, "-blendu", 7)) {
+            bufferPointer = goAndCopyNextWord(textureNameBuffer, bufferPointer, WORD_BUFFER_LENGTH, bufferEnd);
+        } else if (!strncmp(bufferPointer, "-blendv", 7)) {
+            bufferPointer = goAndCopyNextWord(textureNameBuffer, bufferPointer, WORD_BUFFER_LENGTH, bufferEnd);
+        } else if (!strncmp(bufferPointer, "-cc", 3)) {
+            bufferPointer = goAndCopyNextWord(textureNameBuffer, bufferPointer, WORD_BUFFER_LENGTH, bufferEnd);
+        } else if (!strncmp(bufferPointer, "-clamp", 6)) {
+            bufferPointer = readBool(bufferPointer, clamp, bufferEnd);
+        } else if (!strncmp(bufferPointer, "-texres", 7)) {
+            bufferPointer = goAndCopyNextWord(textureNameBuffer, bufferPointer, WORD_BUFFER_LENGTH, bufferEnd);
+        } else if (!strncmp(bufferPointer, "-type", 5)) {
+            bufferPointer = goAndCopyNextWord(textureNameBuffer, bufferPointer, WORD_BUFFER_LENGTH, bufferEnd);
+        } else if (!strncmp(bufferPointer, "-mm", 3)) {
+            bufferPointer = goAndCopyNextWord(textureNameBuffer, bufferPointer, WORD_BUFFER_LENGTH, bufferEnd);
+            bufferPointer = goAndCopyNextWord(textureNameBuffer, bufferPointer, WORD_BUFFER_LENGTH, bufferEnd);
+        } else if (!strncmp(bufferPointer, "-o", 2)) {
+            bufferPointer = goAndCopyNextWord(textureNameBuffer, bufferPointer, WORD_BUFFER_LENGTH, bufferEnd);
+            bufferPointer = goAndCopyNextWord(textureNameBuffer, bufferPointer, WORD_BUFFER_LENGTH, bufferEnd);
+            if (!core::isdigit(textureNameBuffer[0])) {
+                continue;
+            }
+            bufferPointer = goAndCopyNextWord(textureNameBuffer, bufferPointer, WORD_BUFFER_LENGTH, bufferEnd);
+            if (!core::isdigit(textureNameBuffer[0])) {
+                continue;
+            }
+        } else if (!strncmp(bufferPointer, "-s", 2)) {
+            bufferPointer = goAndCopyNextWord(textureNameBuffer, bufferPointer, WORD_BUFFER_LENGTH, bufferEnd);
+            bufferPointer = goAndCopyNextWord(textureNameBuffer, bufferPointer, WORD_BUFFER_LENGTH, bufferEnd);
+            if (!core::isdigit(textureNameBuffer[0])) {
+                continue;
+            }
+            bufferPointer = goAndCopyNextWord(textureNameBuffer, bufferPointer, WORD_BUFFER_LENGTH, bufferEnd);
+            if (!core::isdigit(textureNameBuffer[0])) {
+                continue;
+            }
+        } else if (!strncmp(bufferPointer, "-t", 2)) {
+            bufferPointer = goAndCopyNextWord(textureNameBuffer, bufferPointer, WORD_BUFFER_LENGTH, bufferEnd);
+            bufferPointer = goAndCopyNextWord(textureNameBuffer, bufferPointer, WORD_BUFFER_LENGTH, bufferEnd);
+            if (!core::isdigit(textureNameBuffer[0])) {
+                continue;
+            }
+            bufferPointer = goAndCopyNextWord(textureNameBuffer, bufferPointer, WORD_BUFFER_LENGTH, bufferEnd);
+            if (!core::isdigit(textureNameBuffer[0])) {
+                continue;
+            }
+        }
+
+        bufferPointer = goAndCopyNextWord(textureNameBuffer, bufferPointer, WORD_BUFFER_LENGTH, bufferEnd);
+    }
+
+    if (type == CTT_SPECULAR_COLOR && core::isdigit(textureNameBuffer[0])) {
+        currentMaterial->meshbuffer->Material.MaterialTypeParam = core::fast_atof(textureNameBuffer);
+    }
+    if (clamp) {
+        currentMaterial->meshbuffer->Material.setFlag(video::EMF_TEXTURE_WRAP, video::ETC_CLAMP);
+    }
+
+    io::path textureName(textureNameBuffer);
+    textureName.replace('\\', '/');
+    video::ITexture* texture = nullptr;
+    bool isNewTexture = false;
+
+    if (textureName.size()) {
+        io::path textureNameWithUserPath(sceneManager->getParameters()->getAttributeAsString(scene::OBJ_TEXTURE_PATH));
+        if (textureNameWithUserPath.size()) {
+            textureNameWithUserPath += '/';
+            textureNameWithUserPath += textureName;
+        }
+        if (fileSystem->existFile(textureNameWithUserPath)) {
+            texture = sceneManager->getVideoDriver()->getTexture(textureNameWithUserPath);
+        } else if (fileSystem->existFile(textureName)) {
+            isNewTexture = sceneManager->getVideoDriver()->findTexture(textureName) == 0;
+            texture = sceneManager->getVideoDriver()->getTexture(textureName);
+        } else {
+            isNewTexture = sceneManager->getVideoDriver()->findTexture(relativePath + textureName) == 0;
+            texture = sceneManager->getVideoDriver()->getTexture(relativePath + textureName);
+        }
+    }
+
+    if (texture) {
+        switch (type) {
+            case CTT_DIFFUSE_COLOR:
+                currentMaterial->meshbuffer->Material.setTexture(0, texture);
+                break;
+            case CTT_SPECULAR_COLOR:
+                if (isNewTexture) {
+                    sceneManager->getVideoDriver()->makeNormalMapTexture(texture, bumpiness);
+                }
+                currentMaterial->meshbuffer->Material.setTexture(1, texture);
+                currentMaterial->meshbuffer->Material.MaterialType = video::EMT_PARALLAX_MAP_SOLID;
+                currentMaterial->meshbuffer->Material.MaterialTypeParam = 0.035f;
+                break;
+            case CTT_AMBIENT_COLOR:
+                currentMaterial->meshbuffer->Material.setTexture(0, texture);
+                currentMaterial->meshbuffer->Material.MaterialType = video::EMT_TRANSPARENT_ADD_COLOR;
+                break;
+            case CTT_SHININESS:
+                currentMaterial->meshbuffer->Material.setTexture(1, texture);
+                currentMaterial->meshbuffer->Material.MaterialType = video::EMT_REFLECTION_2_LAYER;
+                break;
+        }
+
+        currentMaterial->meshbuffer->Material.DiffuseColor.set(
+            currentMaterial->meshbuffer->Material.DiffuseColor.getAlpha(), 255, 255, 255
+        );
+    }
+
+    return bufferPointer;
+}
+
 void ColoredWaveFrontLoader::readMaterial(const c8* fileName, const io::path& relativePath)
 {
+    const io::path realFile(fileName);
+    io::IReadFile* materialReader;
 
+    if (fileSystem->existFile(realFile)) {
+        materialReader = fileSystem->createAndOpenFile(realFile);
+    } else if (fileSystem->existFile(relativePath + realFile)) {
+        materialReader = fileSystem->createAndOpenFile(relativePath + realFile);
+    } else if (fileSystem->existFile(fileSystem->getFileBasename(realFile))) {
+        materialReader = fileSystem->createAndOpenFile(fileSystem->getFileBasename(realFile));
+    } else {
+        materialReader = fileSystem->createAndOpenFile(relativePath + fileSystem->getFileBasename(realFile));
+    }
+
+    if (!materialReader) {
+        return;
+    }
+
+    const long fileSize = materialReader->getSize();
+    if (!fileSize) {
+        materialReader->drop();
+        return;
+    }
+
+    c8* buffer = new c8[fileSize];
+    materialReader->read((void*)buffer, fileSize);
+    const c8* bufferEnd = buffer + fileSize;
+
+    SObjMtl* currentMaterial = nullptr;
+
+    const c8* bufferPointer = buffer;
+
+    while (bufferPointer != bufferEnd) {
+        switch (*bufferPointer) {
+            case 'n': { // newmtl
+                if (currentMaterial) {
+                    materials.push_back(currentMaterial);
+                }
+                c8 materialNameBuffer[WORD_BUFFER_LENGTH];
+                bufferPointer = goAndCopyNextWord(materialNameBuffer, bufferPointer, WORD_BUFFER_LENGTH, bufferEnd);
+                currentMaterial = new SObjMtl();
+                currentMaterial->name = materialNameBuffer;
+                break;
+            }
+            case 'i': { // illum
+                if (currentMaterial) {
+                    const u32 COLOR_BUFFER_LENGTH = 16;
+                    c8 illumString[COLOR_BUFFER_LENGTH];
+                    bufferPointer = goAndCopyNextWord(illumString, bufferPointer, COLOR_BUFFER_LENGTH, bufferEnd);
+                    currentMaterial->illumination = (c8)atol(illumString);        
+                }
+                break;
+            }
+            case 'N': {
+                if (currentMaterial) {
+                    switch (bufferPointer[1]) {
+                        case 's': { // Ns - shininess
+                            const u32 COLOR_BUFFER_LENGTH = 16;
+                            c8 shininessString[COLOR_BUFFER_LENGTH];
+                            bufferPointer = goAndCopyNextWord(shininessString, bufferPointer, COLOR_BUFFER_LENGTH, bufferEnd);
+                            f32 shininessValue = core::fast_atof(shininessString);
+                            shininessValue *= 0.128f;
+                            currentMaterial->meshbuffer->Material.Shininess = shininessValue;
+                            break;
+                        }
+                        case 'i': { // Ni - refraction index
+                            c8 refractionString[WORD_BUFFER_LENGTH];
+                            bufferPointer = goAndCopyNextWord(refractionString, bufferPointer, WORD_BUFFER_LENGTH, bufferEnd);
+                            break;
+                        }
+                    }
+                }
+                break;
+            }
+            case 'K': {
+                if (currentMaterial) {
+                    switch (bufferPointer[1]) {
+                        case 'd': { // Kd - diffuse
+                            bufferPointer = readColor(bufferPointer, currentMaterial->meshbuffer->Material.DiffuseColor, bufferEnd);
+                            break;
+                        }
+                        case 's': { // Ks - specular
+                            bufferPointer = readColor(bufferPointer, currentMaterial->meshbuffer->Material.SpecularColor, bufferEnd);
+                            break;
+                        }
+                        case 'a': { // Ka - ambient
+                            bufferPointer = readColor(bufferPointer, currentMaterial->meshbuffer->Material.AmbientColor, bufferEnd);
+                            break;
+                        }
+                        case 'e': { // Ke - emissive
+                            bufferPointer = readColor(bufferPointer, currentMaterial->meshbuffer->Material.EmissiveColor, bufferEnd);
+                            break;
+                        }
+                        default:
+                            break;
+                    }
+                }
+                break;
+            }
+            case 'b': // bump
+            case 'm': { // texture maps
+                if (currentMaterial) {
+                    bufferPointer = readTextures(bufferPointer, bufferEnd, currentMaterial, relativePath);
+                }
+                break;
+            }
+            case 'd': { // transparency
+                const u32 COLOR_BUFFER_LENGTH = 16;
+                c8 transparencyString[COLOR_BUFFER_LENGTH];
+                bufferPointer = goAndCopyNextWord(transparencyString, bufferPointer, COLOR_BUFFER_LENGTH, bufferEnd);
+                f32 value = core::fast_atof(transparencyString);
+                currentMaterial->meshbuffer->Material.DiffuseColor.setAlpha((s32)(value * 255));
+                if (value < 1.0f) {
+                    currentMaterial->meshbuffer->Material.MaterialType = video::EMT_TRANSPARENT_VERTEX_ALPHA;
+                }
+                break;
+            }
+            case 'T': {
+                if (currentMaterial) {
+                    switch (bufferPointer[1]) {
+                        case 'f': { // Tf - transmitivity
+                            const u32 COLOR_BUFFER_LENGTH = 16;
+                            c8 redString[COLOR_BUFFER_LENGTH];
+                            c8 greenString[COLOR_BUFFER_LENGTH];
+                            c8 blueString[COLOR_BUFFER_LENGTH];
+
+                            bufferPointer = goAndCopyNextWord(redString, bufferPointer, COLOR_BUFFER_LENGTH, bufferEnd);
+                            bufferPointer = goAndCopyNextWord(greenString, bufferPointer, COLOR_BUFFER_LENGTH, bufferEnd);
+                            bufferPointer = goAndCopyNextWord(blueString, bufferPointer, COLOR_BUFFER_LENGTH, bufferEnd);
+
+                            f32 transparency = (core::fast_atof(redString) + core::fast_atof(greenString) + core::fast_atof(blueString)) / 3;
+
+                            currentMaterial->meshbuffer->Material.DiffuseColor.setAlpha((s32)(transparency * 255));
+                            if (transparency < 1.0f) {
+                                currentMaterial->meshbuffer->Material.MaterialType = video::EMT_TRANSPARENT_VERTEX_ALPHA;
+                            }
+
+                            break;
+                        }
+                        default:
+                            break;
+                    }
+                }
+                break;
+            }
+            default:
+                break;
+        }
+
+        bufferPointer = goNextLine(bufferPointer, bufferEnd);
+    }
+
+    if (currentMaterial) {
+        materials.push_back(currentMaterial);
+    }
+
+    delete[] buffer;
+    materialReader->drop();
 }
 
 ColoredWaveFrontLoader::SObjMtl* ColoredWaveFrontLoader::findMaterial(const core::stringc& materialName, const core::stringc& groupName)
 {
-    ColoredWaveFrontLoader::SObjMtl* material = nullptr;
+    ColoredWaveFrontLoader::SObjMtl* defaultMaterial = nullptr;
+
+    for (u32 i = 0; i < materials.size(); ++i) {
+        if (materials[i]->name == materialName) {
+            if (materials[i]->group == groupName) {
+                return materials[i];
+            } else {
+                defaultMaterial = materials[i];
+            }
+        }
+    }
+
+    if (defaultMaterial) {
+        materials.push_back(new SObjMtl(*defaultMaterial));
+        materials.getLast()->group = groupName;
+        return materials.getLast();
+    } else if (groupName.size()) {
+        materials.push_back(new SObjMtl(*materials[0]));
+        materials.getLast()->group = groupName;
+        return materials.getLast();
+    }
 
     return nullptr;
 }
@@ -392,7 +716,7 @@ const c8* ColoredWaveFrontLoader::goAndCopyNextWord(c8* outBuffer, const c8* inB
     return inBuffer;
 }
 
-bool ColoredWaveFrontLoader::retrieveVertexIndices(c8* vertexData, s32* indices, const c8* bufferEnd, u32 vbSize, u32 vtSize, u32 vnSize, u32 vcSize)
+bool ColoredWaveFrontLoader::retrieveVertexIndices(c8* vertexData, s32* indices, const c8* bufferEnd, u32 vbSize, u32 vtSize, u32 vnSize)
 {
     c8 word[16] = "";
     const c8* pointer = goFirstWord(vertexData, bufferEnd);
@@ -416,9 +740,6 @@ bool ColoredWaveFrontLoader::retrieveVertexIndices(c8* vertexData, s32* indices,
                     case 2:
                         indices[indexType] += vnSize;
                         break;
-                    case 3:
-                        indices[indexType] += vcSize;
-                        break;
                 }
             } else {
                 indices[indexType] -= 1;
@@ -428,11 +749,11 @@ bool ColoredWaveFrontLoader::retrieveVertexIndices(c8* vertexData, s32* indices,
             i = 0;
 
             if (*pointer == '/') {
-                if (++indexType > 3) {
+                if (++indexType > 2) {
                     indexType = 0;
                 }
             } else {
-                while (++indexType < 4) {
+                while (++indexType < 3) {
                     indices[indexType] = -1;
                 }
                 ++pointer;
