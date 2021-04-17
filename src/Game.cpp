@@ -2,6 +2,7 @@
 #include "EventManager.h"
 #include "Game.h"
 #include "Map.h"
+#include "loaders/ColoredWaveFrontLoader.h"
 
 using namespace irr;
 
@@ -23,6 +24,10 @@ Game::Game()
     irrlichtDevice = createDeviceEx(params);
     videoDriver = irrlichtDevice->getVideoDriver();
     sceneManager = irrlichtDevice->getSceneManager();
+    
+    // Modified WaveFront (OBJ) format loader (with vertex colors data)
+    auto coloredWaveFrontLoader = new ColoredWaveFrontLoader(sceneManager, irrlichtDevice->getFileSystem());
+    sceneManager->addExternalMeshLoader(coloredWaveFrontLoader);
 
     controller = new Controller(static_cast<EventManager*>(irrlichtDevice->getEventReceiver()));
     currentScene = new Map(this, "labo");
