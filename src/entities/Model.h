@@ -16,7 +16,7 @@ class Model : public Entity
 {
 public:
     Model(Scene* scene, const string& name);
-    virtual void update(f32 speed);
+    virtual void update(f32 speed) = 0;
     virtual ~Model();
 
     scene::IMesh* getMesh();
