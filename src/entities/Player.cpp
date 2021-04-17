@@ -1,7 +1,7 @@
 #include "Player.h"
 
 Player::Player(Map* map)
-    : Model(map, "content/models/player/player.obj")
+    : Model(map, "content/models/player/kakashi_anim.b3d")
 {
     node = scene->getSceneManager()->addAnimatedMeshSceneNode(static_cast<scene::IAnimatedMesh*>(mesh));
     node->setMaterialFlag(video::EMF_LIGHTING, false);
@@ -15,7 +15,7 @@ void Player::update(f32 speed)
 
     if (scene->getController()->isActionPerformed(ACTION_JUMP, true)) {
         if (animator != nullptr) {
-            animator->jump(4.0f);
+            animator->jump(0.35f);
         }
     }
 }

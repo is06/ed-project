@@ -12,6 +12,7 @@
 #include "entities/Light.h"
 #include "entities/Player.h"
 #include "entities/World.h"
+#include "entities/objects/StaticModel.h"
 
 using namespace irr;
 using namespace std;
@@ -22,6 +23,7 @@ class Game;
 class Light;
 class Player;
 class Scene;
+class StaticModel;
 class World;
 
 class Map : public Scene
@@ -36,7 +38,8 @@ public:
 
     core::vector3df gravity;
 
-private:    
+private:
+    StaticModel* addStatic(const string& name);
     Light* addLight(const string& name);
     Light* light(const string& name);
 

@@ -1,8 +1,8 @@
 #include "World.h"
 #include "../GameException.h"
 
-World::World(Map* map, const string& name)
-    : Model(map, "content/models/maps/" + map->getName() + "/" + name + ".obj")
+World::World(Map* map)
+    : Model(map, "content/maps/" + map->getName() + "/mesh.cwf")
 {
     node = map->getSceneManager()->addMeshSceneNode(mesh);
 
@@ -12,6 +12,11 @@ World::World(Map* map, const string& name)
 
     node->getMaterial(0).Shininess = 0;
     node->getMaterial(0).SpecularColor = video::SColor(0, 0, 0, 0);
+}
+
+void World::update(f32 speed)
+{
+    Model::update(speed);
 }
 
 World::~World()

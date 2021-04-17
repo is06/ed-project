@@ -13,8 +13,9 @@ class Map;
 class World : public Model
 {
 public:
-    World(Map* map, const string& name);
-    ~World();
+    World(Map* map);
+    virtual void update(f32 speed);
+    virtual ~World();
 };
 
 #endif
