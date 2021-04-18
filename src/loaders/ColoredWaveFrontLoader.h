@@ -60,6 +60,12 @@ private:
         CTT_SHININESS = 3
     };
 
+    enum EIndiceType {
+        CIT_COORD = 0,
+        CIT_TEXTURE_COORD = 1,
+        CIT_NORMAL = 2
+    };
+
     const c8* readTextures(const c8* bufferPointer, const c8* const bufferEnd, SObjMtl* currentMaterial, const io::path& relativePath);
     const c8* goFirstWord(const c8* bufferPointer, const c8* const bufferEnd, bool acrossNewlines=true);
     const c8* goNextWord(const c8* bufferPointer, const c8* const bufferEnd, bool acrossNewlines=true);

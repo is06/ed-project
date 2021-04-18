@@ -15,7 +15,7 @@ Map::Map(Game* game, const string& name) : Scene(game)
 
     gravity = core::vector3df(0, -1.0f, 0);
 
-    sceneManager->setAmbientLight(video::SColor(255, 255, 255, 255));
+    //sceneManager->setAmbientLight(video::SColor(255, 128, 128, 128));
     player->attachWorldForCollisions(world);
 
     addStatic("vc")

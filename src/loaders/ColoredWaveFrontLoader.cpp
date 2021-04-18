@@ -40,6 +40,7 @@ scene::IAnimatedMesh* ColoredWaveFrontLoader::createMesh(io::IReadFile* file)
     SObjMtl* currentMaterial = new SObjMtl();
     materials.push_back(currentMaterial);
     u32 smoothingGroup = 0;
+    u32 vertexColorIndex = 0;
 
     // Process file
     core::stringc groupName, materialName;
@@ -142,7 +143,7 @@ scene::IAnimatedMesh* ColoredWaveFrontLoader::createMesh(io::IReadFile* file)
 
                 while (linePointer[0] != 0) {
                     s32 indices[4];
-                    indices[1] = indices[2] = indices[3] = -1;
+                    indices[CIT_TEXTURE_COORD] = indices[CIT_NORMAL] = -1;
                     u32 wordLength = copyWord(vertexWord, linePointer, WORD_BUFFER_LENGTH, endPointer);
 
                     retrieveVertexIndices(
@@ -155,40 +156,32 @@ scene::IAnimatedMesh* ColoredWaveFrontLoader::createMesh(io::IReadFile* file)
                     );
 
                     // Coords
-                    vertex.Pos = vertexBuffer[indices[0]];
+                    vertex.Pos = vertexBuffer[indices[CIT_COORD]];
 
                     // Texture coords
-                    if (indices[1] != -1) {
-                        vertex.TCoords = textureCoordBuffer[indices[1]];
+                    if (indices[CIT_TEXTURE_COORD] != -1) {
+                        vertex.TCoords = textureCoordBuffer[indices[CIT_TEXTURE_COORD]];
                     } else {
                         vertex.TCoords.set(0.0f, 0.0f);
                     }
 
                     // Normal
-                    if (indices[2] != -1) {
-                        vertex.Normal = normalsBuffer[indices[2]];
+                    if (indices[CIT_NORMAL] != -1) {
+                        vertex.Normal = normalsBuffer[indices[CIT_NORMAL]];
                     } else {
                         vertex.Normal.set(0.0f, 0.0f, 0.0f);
                         currentMaterial->recalculateNormals = true;
                     }
 
-                    // Vertex colors
-                    if (indices[1] != -1) {
-                        vertex.Color = vertexColorBuffer[indices[1]];
-                    }
+                    vertex.Color = vertexColorBuffer[vertexColorIndex];
 
-                    int vertexLocation;
-                    core::map<video::S3DVertex, int>::Node* node = currentMaterial->vertMap.find(vertex);
-                    if (node) {
-                        vertexLocation = node->getValue();
-                    } else {
-                        currentMaterial->meshbuffer->Vertices.push_back(vertex);
-                        vertexLocation = currentMaterial->meshbuffer->Vertices.size() - 1;
-                        currentMaterial->vertMap.insert(vertex, vertexLocation);
-                    }
-
+                    currentMaterial->meshbuffer->Vertices.push_back(vertex);
+                    int vertexLocation = currentMaterial->meshbuffer->Vertices.size() - 1;
+                    currentMaterial->vertMap.insert(vertex, vertexLocation);
                     faceCorners.push_back(vertexLocation);
+
                     linePointer = goNextWord(linePointer, endPointer);
+                    ++vertexColorIndex;
                 }
 
                 for (u32 i = 1; i < faceCorners.size() - 1; ++i) {
@@ -720,7 +713,7 @@ bool ColoredWaveFrontLoader::retrieveVertexIndices(c8* vertexData, s32* indices,
 {
     c8 word[16] = "";
     const c8* pointer = goFirstWord(vertexData, bufferEnd);
-    u32 indexType = 0;
+    u32 indexType = CIT_COORD;
 
     u32 i = 0;
     while (pointer != bufferEnd) {
@@ -731,13 +724,13 @@ bool ColoredWaveFrontLoader::retrieveVertexIndices(c8* vertexData, s32* indices,
             indices[indexType] = core::strtol10(word);
             if (indices[indexType] < 0) {
                 switch (indexType) {
-                    case 0:
+                    case CIT_COORD:
                         indices[indexType] += vbSize;
                         break;
-                    case 1:
+                    case CIT_TEXTURE_COORD:
                         indices[indexType] += vtSize;
                         break;
-                    case 2:
+                    case CIT_NORMAL:
                         indices[indexType] += vnSize;
                         break;
                 }
@@ -750,7 +743,7 @@ bool ColoredWaveFrontLoader::retrieveVertexIndices(c8* vertexData, s32* indices,
 
             if (*pointer == '/') {
                 if (++indexType > 2) {
-                    indexType = 0;
+                    indexType = CIT_COORD;
                 }
             } else {
                 while (++indexType < 3) {
