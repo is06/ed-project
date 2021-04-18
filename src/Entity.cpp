@@ -16,7 +16,7 @@ void Entity::draw()
 
 }
 
-Entity* Entity::position(f32 x, f32 y, f32 z)
+Entity* Entity::setPosition(f32 x, f32 y, f32 z)
 {
     node->setPosition(core::vector3df(x, y, z));
 

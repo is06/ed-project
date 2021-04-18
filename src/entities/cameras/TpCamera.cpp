@@ -1,4 +1,5 @@
 #include "TpCamera.h"
+#include "../../Direction.h"
 
 TpCamera::TpCamera(Player* player, Controller* controller) : Camera(player->getMap())
 {
@@ -12,8 +13,9 @@ TpCamera::TpCamera(Player* player, Controller* controller) : Camera(player->getM
         player->getNode()->getPosition().Y + 1.7f,
         player->getNode()->getPosition().Z
     ));
+    player->attachThirdPersonCamera(this);
 
-    rotation = (3 * core::PI) / 2;
+    rotation = Direction::top;
     height = MAX_HEIGHT;
     distance = MAX_FAR;
 }
@@ -22,19 +24,19 @@ void TpCamera::update(f32 speed)
 {
     Camera::update(speed);
 
-    f32 xrot = controller->getCameraXRotation();
-    f32 yrot = controller->getCameraYRotation();
+    f32 xAxis = controller->getCameraXAxis();
+    f32 yAxis = controller->getCameraYAxis();
 
-    if (xrot < -35.0f) {
-        goLeft(speed * xrot * -1);
-    } else if (xrot > 35.0f) {
-        goRight(speed * xrot);
+    if (xAxis < -35.0f) {
+        goLeft(speed * xAxis * -1);
+    } else if (xAxis > 35.0f) {
+        goRight(speed * xAxis);
     }
 
-    if (yrot > 35.0f) {
-        goNear(speed * yrot);
-    } else if (yrot < -35.0f) {
-        goFar(speed * yrot * -1);
+    if (yAxis > 35.0f) {
+        goNear(speed * yAxis);
+    } else if (yAxis < -35.0f) {
+        goFar(speed * yAxis * -1);
     }
 
     f32 x = player->getNode()->getPosition().X + distance * cos(rotation);

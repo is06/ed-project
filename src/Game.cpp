@@ -49,6 +49,9 @@ void Game::mainLoop()
         title += lastFPS;
         irrlichtDevice->setWindowCaption(title.c_str());
 
+        // Global controls
+        //controller->isActionPerformed(ACTION)
+
         // Scene rendering
         videoDriver->beginScene();
         currentScene->update(lastCycleTime / 1000.0f);

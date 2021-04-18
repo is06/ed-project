@@ -8,7 +8,7 @@ Controller::Controller(EventManager* eventManager)
 bool Controller::isActionPerformed(ControlAction action, bool once)
 {
     switch (action) {
-        case ACTION_JUMP:
+        case CONTROL_ACTION_JUMP:
             return keyboard->pressed(KEY_KEY_V, once);
             break;
         default:
@@ -18,7 +18,25 @@ bool Controller::isActionPerformed(ControlAction action, bool once)
     return false;
 }
 
-f32 Controller::getCameraXRotation()
+f32 Controller::getPlayerXAxis()
+{
+    if (keyboard->pressed(KEY_LEFT) || keyboard->pressed(KEY_RIGHT)) {
+        return keyboard->getXAxis();
+    }
+
+    return 0.0f;
+}
+
+f32 Controller::getPlayerYAxis()
+{
+    if (keyboard->pressed(KEY_UP) || keyboard->pressed(KEY_DOWN)) {
+        return keyboard->getYAxis();
+    }
+
+    return 0.0f;
+}
+
+f32 Controller::getCameraXAxis()
 {
     if (keyboard->pressed(KEY_KEY_J)) {
         return -100.0f;
@@ -30,7 +48,7 @@ f32 Controller::getCameraXRotation()
     return 0.0f;
 }
 
-f32 Controller::getCameraYRotation()
+f32 Controller::getCameraYAxis()
 {
     if (keyboard->pressed(KEY_KEY_I)) {
         return 100.0f;
@@ -40,6 +58,11 @@ f32 Controller::getCameraYRotation()
     }
 
     return 0.0f;
+}
+
+Keyboard* Controller::getKeyboard()
+{
+    return keyboard;
 }
 
 Controller::~Controller()

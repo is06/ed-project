@@ -9,8 +9,8 @@ class Keyboard;
 
 enum ControlAction
 {
-    ACTION_JUMP,
-    ACTION_ATTACK
+    CONTROL_ACTION_JUMP,
+    CONTROL_ACTION_ATTACK
 };
 
 class Controller
@@ -21,8 +21,12 @@ public:
 
     bool isActionPerformed(ControlAction action, bool once = false);
 
-    f32 getCameraXRotation();
-    f32 getCameraYRotation();
+    f32 getPlayerXAxis();
+    f32 getPlayerYAxis();
+    f32 getCameraXAxis();
+    f32 getCameraYAxis();
+
+    Keyboard* getKeyboard();
 
 private:
     Keyboard* keyboard;

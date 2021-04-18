@@ -83,7 +83,7 @@ scene::IAnimatedMesh* ColoredWaveFrontLoader::createMesh(io::IReadFile* file)
                         bufferPointer = readColor(bufferPointer, color, bufferEnd);
                         vertexColorBuffer.push_back(color);
                         break;
-                    } 
+                    }
                 }
                 break;
             }
