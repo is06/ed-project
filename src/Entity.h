@@ -19,6 +19,7 @@ public:
 
     scene::ISceneNode* getNode();
     Entity* setPosition(f32 x, f32 y, f32 z);
+    virtual void setDebugFlags(bool active);
 
 protected:
     Scene* scene;

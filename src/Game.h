@@ -20,6 +20,8 @@ public:
     scene::ISceneManager* getSceneManager();
     Controller* getController();
 
+    bool isInDebugMode;
+
 private:
     Game();
     void mainLoop();

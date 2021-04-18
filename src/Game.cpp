@@ -50,7 +50,10 @@ void Game::mainLoop()
         irrlichtDevice->setWindowCaption(title.c_str());
 
         // Global controls
-        //controller->isActionPerformed(ACTION)
+        if (controller->getKeyboard()->pressed(KEY_F3, true)) {
+            isInDebugMode = !isInDebugMode;
+            currentScene->setDebugFlags(isInDebugMode);
+        }
 
         // Scene rendering
         videoDriver->beginScene();

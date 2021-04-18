@@ -21,6 +21,7 @@ public:
 
     scene::ISceneManager* getSceneManager();
     Controller* getController();
+    virtual void setDebugFlags(bool enabled);
 
 protected:
     Game* game;

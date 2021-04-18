@@ -54,6 +54,16 @@ Light* Map::addLight(const string& name)
     return light;
 }
 
+void Map::setDebugFlags(bool active)
+{
+    player->setDebugFlags(active);
+    world->setDebugFlags(active);
+
+    for (auto& pair : entities) {
+        pair.second->setDebugFlags(active);
+    }
+}
+
 Map::~Map()
 {
     delete player;

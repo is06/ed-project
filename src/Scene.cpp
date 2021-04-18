@@ -28,6 +28,11 @@ Controller* Scene::getController()
     return controller;
 }
 
+void Scene::setDebugFlags(bool active)
+{
+    
+}
+
 Scene::~Scene()
 {
 

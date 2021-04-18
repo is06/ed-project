@@ -28,6 +28,11 @@ scene::ISceneNode* Entity::getNode()
     return node;
 }
 
+void Entity::setDebugFlags(bool active)
+{
+    node->setMaterialFlag(video::EMF_WIREFRAME, active);
+}
+
 Entity::~Entity()
 {
 

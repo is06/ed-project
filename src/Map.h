@@ -35,6 +35,7 @@ public:
     virtual ~Map();
 
     const string& getName() const;
+    void setDebugFlags(bool active);
 
     core::vector3df gravity;
 
