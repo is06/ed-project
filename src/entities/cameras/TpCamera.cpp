@@ -8,14 +8,9 @@ TpCamera::TpCamera(Player* player, Controller* controller) : Camera(player->getM
 
     auto camera = static_cast<scene::ICameraSceneNode*>(node);
     camera->bindTargetAndRotation(true);
-    camera->setTarget(core::vector3df(
-        player->getNode()->getPosition().X,
-        player->getNode()->getPosition().Y + 1.7f,
-        player->getNode()->getPosition().Z
-    ));
     player->attachThirdPersonCamera(this);
 
-    rotation = Direction::top;
+    rotation = Direction::up;
     height = MAX_HEIGHT;
     distance = MAX_FAR;
 }
@@ -23,6 +18,13 @@ TpCamera::TpCamera(Player* player, Controller* controller) : Camera(player->getM
 void TpCamera::update(f32 speed)
 {
     Camera::update(speed);
+
+    auto camera = static_cast<scene::ICameraSceneNode*>(node);
+    camera->setTarget(core::vector3df(
+        player->getNode()->getPosition().X,
+        player->getNode()->getPosition().Y + 1.7f,
+        player->getNode()->getPosition().Z
+    ));
 
     f32 xAxis = controller->getCameraXAxis();
     f32 yAxis = controller->getCameraYAxis();
