@@ -17,7 +17,7 @@ Game::Game()
     SIrrlichtCreationParameters params;
     params.Bits = 32;
     params.WindowSize = core::dimension2du(1280, 720);
-    params.Vsync = true;
+    params.Vsync = false;
     params.DriverType = video::EDT_OPENGL;
     params.EventReceiver = new EventManager();
 
@@ -61,7 +61,7 @@ void Game::mainLoop()
         sceneManager->drawAll();
         videoDriver->endScene();
 
-        irrlichtDevice->yield();
+        //irrlichtDevice->yield();
     }
 }
 

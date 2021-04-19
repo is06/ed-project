@@ -22,14 +22,9 @@ public:
     void attachWorldForCollisions(World* world);
     void attachThirdPersonCamera(TpCamera* camera);
     Map* getMap();
+    Camera* getAttachedCamera();
 
 private:
-    void goLeft(f32 speed);
-    void goRight(f32 speed);
-    void goForward(f32 speed);
-    void goBackward(f32 speed);
-    void updateCoords(f32 angle, f32 speed);
-
     PlatformPlayerAnimator* platformPlayerAnimator;
     TpCamera* attachedCamera;
 };
