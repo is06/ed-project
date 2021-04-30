@@ -6,7 +6,7 @@ Keyboard::Keyboard(EventManager* eventManager)
     this->eventManager = eventManager;
 }
 
-bool Keyboard::pressed(EKEY_CODE code, bool once)
+bool Keyboard::isPressed(EKEY_CODE code, bool once)
 {
     if (once) {
         return eventManager->isKeyDownOnce(code);

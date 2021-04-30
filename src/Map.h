@@ -42,7 +42,7 @@ public:
 private:
     StaticModel* addStatic(const string& name);
     Light* addLight(const string& name);
-    Light* light(const string& name);
+    Light* getLight(const string& name);
 
     string name;
     Player* player;

@@ -13,7 +13,7 @@ class Keyboard
 {
 public:
     Keyboard(EventManager* eventManager);
-    bool pressed(EKEY_CODE code, bool once = false);
+    bool isPressed(EKEY_CODE code, bool once = false);
     s8 getXAxis();
     s8 getYAxis();
     f32 getDirectionAngle();

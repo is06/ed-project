@@ -9,7 +9,7 @@ bool Controller::isActionPerformed(ControlAction action, bool once)
 {
     switch (action) {
         case CONTROL_ACTION_JUMP:
-            return keyboard->pressed(KEY_KEY_V, once);
+            return keyboard->isPressed(KEY_KEY_V, once);
             break;
         default:
             break;
@@ -20,7 +20,7 @@ bool Controller::isActionPerformed(ControlAction action, bool once)
 
 f32 Controller::getPlayerXAxis()
 {
-    if (keyboard->pressed(KEY_LEFT) || keyboard->pressed(KEY_RIGHT)) {
+    if (keyboard->isPressed(KEY_LEFT) || keyboard->isPressed(KEY_RIGHT)) {
         return keyboard->getXAxis();
     }
 
@@ -29,7 +29,7 @@ f32 Controller::getPlayerXAxis()
 
 f32 Controller::getPlayerYAxis()
 {
-    if (keyboard->pressed(KEY_UP) || keyboard->pressed(KEY_DOWN)) {
+    if (keyboard->isPressed(KEY_UP) || keyboard->isPressed(KEY_DOWN)) {
         return keyboard->getYAxis();
     }
 
@@ -38,10 +38,10 @@ f32 Controller::getPlayerYAxis()
 
 f32 Controller::getCameraXAxis()
 {
-    if (keyboard->pressed(KEY_KEY_J)) {
+    if (keyboard->isPressed(KEY_KEY_J)) {
         return -100.0f;
     }
-    if (keyboard->pressed(KEY_KEY_L)) {
+    if (keyboard->isPressed(KEY_KEY_L)) {
         return 100.0f;
     }
 
@@ -50,10 +50,10 @@ f32 Controller::getCameraXAxis()
 
 f32 Controller::getCameraYAxis()
 {
-    if (keyboard->pressed(KEY_KEY_I)) {
+    if (keyboard->isPressed(KEY_KEY_I)) {
         return 100.0f;
     }
-    if (keyboard->pressed(KEY_KEY_K)) {
+    if (keyboard->isPressed(KEY_KEY_K)) {
         return -100.0f;
     }
 

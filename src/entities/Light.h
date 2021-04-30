@@ -14,10 +14,9 @@ public:
     virtual void update(f32 speed);
     virtual ~Light();
 
-    Light* position(f32 x, f32 y, f32 z);
-    Light* color(video::SColor);
-    Light* radius(f32 radius);
-    Light* data(const video::SLight& lightData);
+    Light* setColor(video::SColor);
+    Light* setRadius(f32 radius);
+    Light* setData(const video::SLight& lightData);
 };
 
 #endif
