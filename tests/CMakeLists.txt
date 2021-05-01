@@ -19,4 +19,5 @@ add_test(
 target_link_libraries(
     ${CMAKE_PROJECT_NAME}_test
     PRIVATE Catch2::Catch2
+    ed_lib
 )

@@ -10,9 +10,9 @@ class EventManager : public IEventReceiver
 public:
     EventManager();
 
-    bool OnEvent(const SEvent& event);
-    bool isKeyDown(EKEY_CODE code);
-    bool isKeyDownOnce(EKEY_CODE code);
+    virtual bool OnEvent(const SEvent& event);
+    virtual bool isKeyDown(EKEY_CODE code);
+    virtual bool isKeyDownOnce(EKEY_CODE code);
 
 private:
     bool keyDown[KEY_KEY_CODES_COUNT];
