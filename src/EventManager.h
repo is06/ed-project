@@ -14,7 +14,7 @@ public:
     virtual bool isKeyDown(EKEY_CODE code);
     virtual bool isKeyDownOnce(EKEY_CODE code);
 
-private:
+protected:
     bool keyDown[KEY_KEY_CODES_COUNT];
     bool keyDownOnce[KEY_KEY_CODES_COUNT];
 };
