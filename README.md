@@ -15,4 +15,9 @@ Build
 Run
 ---
 
-    ./ed
+    ./bin/ed
+
+Run tests
+---------
+
+    ctest
