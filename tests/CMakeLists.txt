@@ -1,3 +1,5 @@
+set(EXECUTABLE_OUTPUT_PATH ../bin/${CMAKE_BUILD_TYPE})
+
 find_package(Catch2 REQUIRED)
 
 file(
@@ -11,13 +13,12 @@ add_executable(
     ${test_source_files}
 )
 
-add_test(
-    NAME ${CMAKE_PROJECT_NAME}_test
-    COMMAND ${CMAKE_PROJECT_NAME}_test
-)
-
 target_link_libraries(
     ${CMAKE_PROJECT_NAME}_test
     PRIVATE Catch2::Catch2
     ed_lib
 )
+
+include(CTest)
+include(Catch)
+catch_discover_tests(${CMAKE_PROJECT_NAME}_test)

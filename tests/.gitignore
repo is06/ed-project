@@ -1,5 +1,3 @@
 /CMakeFiles
-/cmake_install.cmake
-/CTestTestfile.cmake
-/ed_test*
+/*.cmake
 /Makefile
