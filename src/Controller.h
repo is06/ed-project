@@ -16,7 +16,7 @@ enum ControlAction
 class Controller
 {
 public:
-    Controller(EventManager* eventManager);
+    Controller(Keyboard* keyboard);
     ~Controller();
 
     bool isActionPerformed(ControlAction action, bool once = false);

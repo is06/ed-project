@@ -1,8 +1,8 @@
 #include "Controller.h"
 
-Controller::Controller(EventManager* eventManager)
+Controller::Controller(Keyboard* keyboard)
 {
-    keyboard = new Keyboard(eventManager);
+    this->keyboard = keyboard;
 }
 
 bool Controller::isActionPerformed(ControlAction action, bool once)
@@ -67,5 +67,5 @@ Keyboard* Controller::getKeyboard()
 
 Controller::~Controller()
 {
-    delete keyboard;
+    
 }

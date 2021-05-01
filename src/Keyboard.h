@@ -13,10 +13,11 @@ class Keyboard
 {
 public:
     Keyboard(EventManager* eventManager);
-    bool isPressed(EKEY_CODE code, bool once = false);
-    s8 getXAxis();
-    s8 getYAxis();
-    f32 getDirectionAngle();
+    virtual ~Keyboard();
+    virtual bool isPressed(EKEY_CODE code, bool once = false);
+    virtual s8 getXAxis();
+    virtual s8 getYAxis();
+    virtual f32 getDirectionAngle();
 
 private:
     EventManager* eventManager;

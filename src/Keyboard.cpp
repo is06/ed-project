@@ -72,3 +72,8 @@ f32 Keyboard::getDirectionAngle()
 {
     return directionAngle;
 }
+
+Keyboard::~Keyboard()
+{
+    
+}

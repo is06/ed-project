@@ -29,7 +29,8 @@ Game::Game()
     auto coloredWaveFrontLoader = new ColoredWaveFrontLoader(sceneManager, irrlichtDevice->getFileSystem());
     sceneManager->addExternalMeshLoader(coloredWaveFrontLoader);
 
-    controller = new Controller(static_cast<EventManager*>(irrlichtDevice->getEventReceiver()));
+    keyboard = new Keyboard(static_cast<EventManager*>(irrlichtDevice->getEventReceiver()));
+    controller = new Controller(keyboard);
     currentScene = new Map(this, "labo");
 }
 
@@ -79,6 +80,7 @@ Game::~Game()
 {
     delete currentScene;
     delete controller;
+    delete keyboard;
 
     irrlichtDevice->drop();
 }

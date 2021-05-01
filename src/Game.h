@@ -31,6 +31,7 @@ private:
     scene::ISceneManager* sceneManager;
 
     Controller* controller;
+    Keyboard* keyboard;
     Scene* currentScene;
 };
 
